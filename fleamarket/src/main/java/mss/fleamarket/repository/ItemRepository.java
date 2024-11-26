@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import mss.fleamarket.domain.Item;
+import mss.fleamarket.domain.Member;
 import mss.fleamarket.domain.status.ItemStatus;
 import org.springframework.stereotype.Repository;
 
@@ -50,6 +51,18 @@ public class ItemRepository {
 
     public List<Item> findAllOrderByAsc() {
         return em.createQuery("select i from Item i order by i.createdAt", Item.class)
+                .getResultList();
+    }
+
+    public List<Item> findAllByAuction(Member member) {
+        return em.createQuery("select mi.item from MemberItem mi where mi.member = :member", Item.class)
+                .setParameter("member", member)
+                .getResultList();
+    }
+
+    public List<Item> findAllByMember(Member member) {
+        return em.createQuery("select i from Item i where i.member = :member", Item.class)
+                .setParameter("member", member)
                 .getResultList();
     }
 }

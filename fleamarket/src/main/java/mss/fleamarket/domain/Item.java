@@ -29,7 +29,7 @@ public class Item {
     private ItemStatus status; // 상품 상태 [SALE, SOLDOUT]
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "higher_id")
     private Member higher; // 최고 입찰 회원
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -29,12 +29,10 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true) // 로그인 성공 시 이동할 url
-                .permitAll()
             .and()
             .logout()
                 .logoutUrl("/logout") // 로그아웃 url
-                .logoutSuccessUrl("/") // 로그아웃 성공 시 이동할 url
-            .permitAll();
+                .logoutSuccessUrl("/"); // 로그아웃 성공 시 이동할 url
 
         return http.build();
     }

@@ -1,10 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* 네비게이션 스타일 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+<!-- 네비게이션 바 -->
+<div class="navbar">
+    <a th:href="@{/}">홈</a>
+</div>
 
+<div class="container">
+    <h1>로그인</h1>
+
+    <!-- 로그인 실패 시 alert 띄우기 -->
+    <div th:if="${param.error}">
+        <script>
+            alert('로그인 실패! 이메일 또는 비밀번호가 올바르지 않습니다.');
+        </script>
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required />
+
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required />
+
+        <button type="submit">로그인</button>
+    </form>
+    <div class="link">
+        <span>계정이 없으신가요? <a th:href="@{/join}">회원가입</a></span>
+    </div>
+</div>
 </body>
 </html>

@@ -1,21 +1,20 @@
 package mss.fleamarket.config;
 
-import lombok.RequiredArgsConstructor;
-import mss.fleamarket.config.handler.CommentWebSocketHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
-@EnableWebSocket
-@RequiredArgsConstructor
-public class WebSocketConfig implements WebSocketConfigurer {
-
-    private final CommentWebSocketHandler commentWebSocketHandler;
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(commentWebSocketHandler, "/comment/{itemId}").setAllowedOrigins("*");
+    public void configureMessageBroker(org.springframework.messaging.simp.config.MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/topic"); // 메시지를 구독할 prefix
+        config.setApplicationDestinationPrefixes("/app"); // 클라이언트가 보낼 메시지 prefix
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/auction").withSockJS(); // WebSocket 엔드포인트
     }
 }

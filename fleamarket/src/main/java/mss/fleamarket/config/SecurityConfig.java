@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true) // 로그인 성공 시 이동할 url
+                .failureUrl("/login?error=true") // 로그인 실패 시 리디렉션할 URL 설정
             .and()
             .logout()
                 .logoutUrl("/logout") // 로그아웃 url

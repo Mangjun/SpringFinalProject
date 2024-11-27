@@ -7,8 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CommentDTO {
-    private String participant; // 참가자
-    private int bidAmount; // 입찰가
+public class AuctionUpdate {
+    private int participantCount; // 참가자
+    private int highestBid; // 입찰가
     private String message; // 메시지
 }

@@ -156,6 +156,7 @@
 
 <div class="container">
     <input type="hidden" id="itemId" th:value="${item.getId()}"/>
+    <input type="hidden" id="memberId" th:value="${member.getId()}"/>
     <!-- 제목 -->
     <div class="header" th:text="${item.getTitle()}">상품 제목</div>
 
@@ -165,6 +166,9 @@
     <!-- 설명 -->
     <div class="content">
         <p class="description" th:text="${item.getDescription() ?: '설명 없음'}">상품 설명</p>
+
+        <!-- 구분선 -->
+        <div class="divider"></div>
 
         <!-- 최고 금액 및 참여 인원 -->
         <div class="info">
@@ -190,23 +194,31 @@
         </div>
 
         <!-- 입찰가 입력 및 버튼 -->
-        <div class="bid-section">
+        <div class="bid-section" th:if="${isLogin}">
             <input type="number" id="bidAmount" placeholder="입찰가 입력"/>
             <button onclick="submitBid()">입찰하기</button>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/dist/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
-    var socket = new SockJS('/auction'); // 서버 WebSocket 엔드포인트
+    console.log(Stomp);
+
+    var itemId = document.getElementById("itemId").value;
+    var socket = new SockJS('/auction'); // 웹소켓 엔드포인트
     var stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function (frame) {
+    // 초기 남은 시간 설정 (서버에서 받은 값으로 초기화)
+    var remainingTime = "00:00:00";  // 예시, 실제로는 서버에서 받아야 합니다.
 
-        // 최고 금액, 참여 인원, 남은 시간, 메시지 업데이트
-        stompClient.subscribe('/topic/auction', function (messageOutput) {
+    // 웹소켓 연결 후 경매 업데이트 받기
+    stompClient.connect({}, function (frame) {
+        console.log("Connected: " + frame);
+
+        // 경매 정보(최고 금액, 참여 인원, 남은 시간, 메시지 등) 업데이트
+        stompClient.subscribe('/topic/auction/' + itemId, function (messageOutput) {
             var data = JSON.parse(messageOutput.body);
 
             // 최고 금액 업데이트
@@ -224,7 +236,7 @@
                 document.getElementById("timeRemaining").textContent = data.timeRemaining;
             }
 
-            // 메시지 추가
+            // 새로운 메시지 추가
             if (data.message !== undefined) {
                 var messageContainer = document.getElementById("messageContainer");
                 var newMessage = document.createElement("div");
@@ -240,10 +252,12 @@
 
     // 입찰하기 버튼 클릭 시 호출
     function submitBid() {
+        var memberId = document.getElementById("memberId").value;
         var bidAmount = document.getElementById("bidAmount").value;
         var itemId = document.getElementById("itemId").value;
         if (bidAmount) {
             stompClient.send("/app/bid", {}, JSON.stringify({
+                memberId: parseInt(memberId, 10),
                 itemId: parseInt(itemId, 10),
                 bidAmount: parseInt(bidAmount, 10)
             }));

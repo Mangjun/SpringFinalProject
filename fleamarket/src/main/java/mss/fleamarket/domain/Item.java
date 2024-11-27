@@ -28,10 +28,6 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemStatus status; // 상품 상태 [SALE, SOLDOUT]
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "higher_id")
-    private Member higher; // 최고 입찰 회원
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 상품 등록한 회원
@@ -53,6 +49,14 @@ public class Item {
     }
 
     /* 연관 관계 메소드 */
+    public boolean bid(Member member, int bidAmount) {
+        if (bidAmount >= price + 100) {
+            this.price = bidAmount;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /* 경매 완료 */
     public void soldOut() {

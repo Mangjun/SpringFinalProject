@@ -50,6 +50,10 @@ public class Item {
 
     /* 연관 관계 메소드 */
     public boolean bid(Member member, int bidAmount) {
+        if (this.member.getId() == member.getId()) {
+            return false;
+        }
+
         if (bidAmount >= price + 100) {
             this.price = bidAmount;
             return true;

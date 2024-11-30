@@ -174,7 +174,7 @@
 
     <!-- 참여한 상품 리스트 -->
     <div class="tab-content participated-products">
-        <div class="product-grid" th:each="product : ${participatedProducts}">
+        <div class="product-grid" th:each="product : ${participatedItems}">
             <div class="product-card">
                 <img th:src="${product.photo}" alt="상품 이미지" />
                 <div class="product-info">

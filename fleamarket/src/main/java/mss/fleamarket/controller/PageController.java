@@ -1,6 +1,7 @@
 package mss.fleamarket.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mss.fleamarket.config.data.CustomUserDetails;
 import mss.fleamarket.domain.Item;
 import mss.fleamarket.domain.Member;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class PageController {
@@ -71,10 +73,22 @@ public class PageController {
         Member member = memberService.getMemberByEmail(email);
 
         List<Item> registerItems = itemService.getItemsByMember(member);
+        List<ItemDTO> registerItemDTOs = new ArrayList<>();
         List<Item> participatedItems = itemService.getItemsByAuction(member);
+        List<ItemDTO> participatedItemDTOs = new ArrayList<>();
 
-        model.addAttribute("registerItems", registerItems);
-        model.addAttribute("participatedItems", participatedItems);
+        for (Item item : registerItems) {
+            registerItemDTOs.add(parseDTO(item));
+        }
+
+        for (Item item : participatedItems) {
+            ItemDTO itemDTO = parseDTO(item);
+            log.info("{}", itemDTO);
+            participatedItemDTOs.add(itemDTO);
+        }
+
+        model.addAttribute("registerItems", registerItemDTOs);
+        model.addAttribute("participatedItems", participatedItemDTOs);
         model.addAttribute("isLogin", isLogin());
         return "myPage";
     }

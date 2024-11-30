@@ -38,19 +38,15 @@ public class ItemRepository {
                 .getResultList();
     }
 
+    public List<Item> findByTitle(String title) {
+        return em.createQuery("select i from Item i where i.title = :title", Item.class)
+                .setParameter("title", title)
+                .getResultList();
+    }
+
     public List<Item> findAllOrderByStatus(ItemStatus status) {
         return em.createQuery("select i from Item i where i.status = :status", Item.class)
                 .setParameter("status", status)
-                .getResultList();
-    }
-
-    public List<Item> findAllOrderByDesc() {
-        return em.createQuery("select i from Item i order by i.createdAt desc", Item.class)
-                .getResultList();
-    }
-
-    public List<Item> findAllOrderByAsc() {
-        return em.createQuery("select i from Item i order by i.createdAt", Item.class)
                 .getResultList();
     }
 

@@ -59,20 +59,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByStatus(ItemStatus status) {
-        return itemRepository.findAllOrderByStatus(status);
+    public List<Item> searchTitle(String title) {
+        return itemRepository.findByTitle(title);
     }
 
     @Override
-    public List<Item> getItemsByDate(boolean orderBy) {
-        /* 1이면 오름차순 */
-        if (orderBy) {
-            return itemRepository.findAllOrderByAsc();
-        }
-        /* 0이면 내림차순 */
-        else {
-            return itemRepository.findAllOrderByDesc();
-        }
+    public List<Item> getItemsByStatus(ItemStatus status) {
+        return itemRepository.findAllOrderByStatus(status);
     }
 
     @Override

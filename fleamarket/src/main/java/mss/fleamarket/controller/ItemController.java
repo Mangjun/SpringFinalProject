@@ -34,6 +34,12 @@ public class ItemController {
     private final CommentService commentService;
     private final PhotoUploadService photoUploadService;
 
+    @GetMapping("/item/search")
+    public String search(@RequestParam("reqTitle") String reqTitle, Model model) {
+
+        return "index";
+    }
+
     @PostMapping("/item/add")
     public String addItem(@RequestParam("title") String title,
                           @RequestParam("description") String description,
@@ -59,9 +65,13 @@ public class ItemController {
 
     @GetMapping("/item/{itemId}")
     public String item(@PathVariable Long itemId, Model model) {
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getEmail();
-        Member member = memberService.getMemberByEmail(email);
+        if (isLogin()) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String email = userDetails.getEmail();
+            Member member = memberService.getMemberByEmail(email);
+
+            model.addAttribute("member", parseDTO(member));
+        }
 
         Item item = itemService.getItem(itemId);
         int participantCount = itemService.getParticipantCount(item);
@@ -87,7 +97,6 @@ public class ItemController {
 
         model.addAttribute("isLogin", isLogin());
         model.addAttribute("item", parseDTO(item));
-        model.addAttribute("member", parseDTO(member));
         model.addAttribute("highestBid", item.getPrice());
         model.addAttribute("participantCount", participantCount);
         model.addAttribute("messages", messages);
